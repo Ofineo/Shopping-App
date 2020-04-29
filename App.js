@@ -1,26 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import { AppLoading } from "expo";
 import * as Fonts from "expo-font";
 import { StyleSheet, Text, View } from "react-native";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 import { enableScreens } from "react-native-screens";
+import productsReducer from "./store/reducers/products";
+import ShopNavigator from "./navigation/ShopNavigator";
 
 enableScreens();
 
 const rootReducer = combineReducers({
-  shop: shopReducer,
+  products: productsReducer,
 });
 
 const store = createStore(rootReducer);
 
 const fetchFonts = () => {
   Fonts.loadAsync({
-    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
-    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    "open-sans": require("./assets/Fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./assets/Fonts/OpenSans-Bold.ttf"),
+    "bb2": require("./assets/Fonts/BalooBhaina2-Regular.ttf"),
+    "bb2-bold": require("./assets/Fonts/BalooBhaina2-Bold.ttf"),
   });
 };
 
 export default function App() {
+  const [fontLoaded, setFontLoaded] = useState(false);
 
   if (!fontLoaded) {
     return (
@@ -31,12 +37,10 @@ export default function App() {
       />
     );
   }
-  
+
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+      <ShopNavigator />
     </Provider>
   );
 }
