@@ -6,10 +6,14 @@ import {
   Image,
   Button,
   ScrollView,
+  Platform,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Product from "../models/product";
 import Colors from "../constants/Colors";
+import * as cartActions from "../store/actions/cart";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { HeaderButton } from "../components/UI/HeaderButton";
 
 const ProductDetailScreen = (props) => {
   const prodId = props.navigation.getParam("productId");
@@ -17,11 +21,16 @@ const ProductDetailScreen = (props) => {
     state.products.availableProducts.find((product) => product.id === prodId)
   );
 
+  const dispatch = useDispatch();
   return (
     <ScrollView>
       <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
       <View style={styles.actions}>
-        <Button color={Colors.primary} title="Add to Cart" onPress={() => {}} />
+        <Button
+          color={Colors.primary}
+          title="Add to Cart"
+          onPress={() => dispatch(cartActions.addToCart(selectedProduct))}
+        />
       </View>
       <Text style={styles.price}>{selectedProduct.price.toFixed(2)}</Text>
       <Text style={styles.description}>{selectedProduct.description}</Text>
@@ -32,6 +41,17 @@ const ProductDetailScreen = (props) => {
 ProductDetailScreen.navigationOptions = (navData) => {
   return {
     title: navData.navigation.getParam("productTitle"),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Cart"
+          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+          onPress={() => {
+            navData.navigation.navigate("Cart");
+          }}
+        />
+      </HeaderButtons>
+    ),
   };
 };
 
