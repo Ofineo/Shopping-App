@@ -1,11 +1,21 @@
-import React from "react";
-import { View, Text, FlatList, Button, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import Colors from "../constants/Colors";
 import CartItem from "../components/shop/CartItem";
 import { deleteItem } from "../store/actions/cart";
+import { addOrder } from "../store/actions/orders";
+import Card from "../components/UI/Card";
 
 const CartScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const cartTotal = useSelector((state) => state.cart.totalAmount);
   const cartItems = useSelector((state) => {
@@ -22,18 +32,33 @@ const CartScreen = (props) => {
     return cartItemsArray.sort((a, b) => (a.productId > b.productId ? 1 : -1));
   });
 
+  const sendOrderHandler = async () => {
+    setIsLoading(true);
+    await dispatch(deleteItem(itemData.item.productId));
+    setIsLoading(false);
+  };
+
   return (
     <View style={styles.screen}>
-      <View style={styles.summary}>
+      <Card style={styles.summary}>
         <Text style={styles.sumaryText}>
-          Total: <Text style={styles.amount}>£{cartTotal.toFixed(2)}</Text>
+          Total:{" "}
+          <Text style={styles.amount}>
+            £{Math.round((cartTotal.toFixed(2) * 100) / 100)}
+          </Text>
         </Text>
-        <Button
-          color={Colors.primary}
-          title="Order now"
-          disabled={cartItems.length === 0}
-        />
-      </View>
+        {isLoading ? (
+          <ActivityIndicator size="small" color={Colors.accent} />
+        ) : (
+          <Button
+            color={Colors.primary}
+            title="Order now"
+            disabled={cartItems.length === 0}
+            onPress={() => dispatch(addOrder(cartItems, cartTotal))}
+          />
+        )}
+      </Card>
+
       <FlatList
         data={cartItems}
         keyExtractor={(item) => item.productId}
@@ -42,12 +67,17 @@ const CartScreen = (props) => {
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.productPrice}
-            onRemove={() => dispatch(deleteItem(itemData.item.productId))}
+            onRemove={sendOrderHandler}
+            deletable
           />
         )}
       />
     </View>
   );
+};
+
+CartScreen.navigationOptions = {
+  title: "Your Cart",
 };
 
 const styles = StyleSheet.create({
@@ -60,13 +90,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 20,
     padding: 10,
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
   },
   sumaryText: {
     fontFamily: "open-sans-bold",

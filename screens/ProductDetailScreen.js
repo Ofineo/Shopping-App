@@ -13,7 +13,7 @@ import Product from "../models/product";
 import Colors from "../constants/Colors";
 import * as cartActions from "../store/actions/cart";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { HeaderButton } from "../components/UI/HeaderButton";
+import CustomHeaderButton  from "../components/UI/HeaderButton";
 
 const ProductDetailScreen = (props) => {
   const prodId = props.navigation.getParam("productId");
@@ -42,7 +42,7 @@ ProductDetailScreen.navigationOptions = (navData) => {
   return {
     title: navData.navigation.getParam("productTitle"),
     headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
           title="Cart"
           iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}

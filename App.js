@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import { AppLoading } from "expo";
 import * as Fonts from "expo-font";
-import { StyleSheet, Text, View } from "react-native";
-import { createStore, combineReducers } from "redux";
+import { StyleSheet} from "react-native";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import ReduxThunk from 'redux-thunk';
 import { Provider } from "react-redux";
 import { enableScreens } from "react-native-screens";
 import productsReducer from "./store/reducers/products";
 import ShopNavigator from "./navigation/ShopNavigator";
 import cartReducer from "./store/reducers/cart";
+import ordersReducer from "./store/reducers/orders";
 
 enableScreens();
 
 const rootReducer = combineReducers({
   products: productsReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  orders: ordersReducer
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () => {
   Fonts.loadAsync({
@@ -47,11 +50,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

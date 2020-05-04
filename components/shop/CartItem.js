@@ -22,7 +22,7 @@ const CartItem = (props) => {
       </View>
       <View style={styles.itemData}>
         <Text style={styles.amount}>£{props.amount.toFixed(2)}</Text>
-        <TouchableComponent
+        {props.deletable &&<TouchableComponent
           style={styles.deleteButton}
           onPress={props.onRemove}
         >
@@ -31,7 +31,7 @@ const CartItem = (props) => {
             size={23}
             color="red"
           />
-        </TouchableComponent>
+        </TouchableComponent>}
       </View>
     </View>
   );
