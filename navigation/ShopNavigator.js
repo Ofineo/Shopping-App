@@ -1,8 +1,13 @@
 import React from "react";
-import { Platform } from "react-native";
+import { useDispatch } from "react-redux";
+import * as authAction from "../store/actions/auth";
+import { Platform, SafeAreaView, Button, View } from "react-native";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { createDrawerNavigator } from "react-navigation-drawer";
+import {
+  createDrawerNavigator,
+  DrawerNavigatorItems,
+} from "react-navigation-drawer";
 import ProductOverviewScreen from "../screens/ProductOverviewScreen";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
 import CartScreen from "../screens/CartScreen";
@@ -93,6 +98,24 @@ const ShopNavigator = createDrawerNavigator(
   {
     contentOptions: {
       activeTintColor: Colors.primary,
+    },
+    contentComponent: (props) => {
+      const dispatch = useDispatch();
+      return (
+        <View style={{ flex: 1, paddingTop: 20 }}>
+          <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
+            <DrawerNavigatorItems {...props} />
+            <Button
+              title="Logout"
+              color={Colors.accent}
+              onPress={() => {
+                dispatch(authAction.logout());
+                props.navigation.navigate({ routeName: "Auth" });
+              }}
+            />
+          </SafeAreaView>
+        </View>
+      );
     },
   }
 );
