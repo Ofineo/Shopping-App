@@ -64,6 +64,7 @@ const EditProductScreen = (props) => {
     },
     formIsValid: editedProduct ? true : false,
   });
+  
   useEffect(() => {
     if (error) {
       Alert.alert("An error ocurred!", errror, [{ text: "Okay" }]);

@@ -7,7 +7,8 @@ export const GET_PRODUCTS = "GET_PRODUCTS";
 
 export const fetchProducts = () => {
   try {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+      const userId = getState().auth.userId;
       const response = await fetch(
         "https://react-native-shop-app-aa566.firebaseio.com/products.json"
       );
@@ -16,13 +17,12 @@ export const fetchProducts = () => {
         throw new Error("Something went wrong");
       }
       const resData = await response.json();
-
       const loadedProducts = [];
       for (const key in resData) {
         loadedProducts.push(
           new Product(
             key,
-            "u1",
+            resData[key].ownerId,
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
@@ -33,6 +33,7 @@ export const fetchProducts = () => {
       dispatch({
         type: GET_PRODUCTS,
         products: loadedProducts,
+        userProducts: loadedProducts.filter((prod) => prod.ownerId === userId),
       });
     };
   } catch (error) {
@@ -42,9 +43,10 @@ export const fetchProducts = () => {
 };
 
 export const deleteProduct = (productId) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://react-native-shop-app-aa566.firebaseio.com/products/${productId}.json`,
+      `https://react-native-shop-app-aa566.firebaseio.com/products/${productId}.json?auth=${token}`,
       {
         method: "DELETE",
       }
@@ -60,16 +62,24 @@ export const deleteProduct = (productId) => {
   };
 };
 export const createProduct = (title, description, imageUrl, price) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     //any async code you want!!
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const response = await fetch(
-      "https://react-native-shop-app-aa566.firebaseio.com/products.json",
+      `https://react-native-shop-app-aa566.firebaseio.com/products.json?auth=${token}`,
       {
         method: "POST",
         header: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, description, imageUrl, price }),
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+          price,
+          ownerId: userId,
+        }),
       }
     );
 
@@ -77,14 +87,22 @@ export const createProduct = (title, description, imageUrl, price) => {
 
     dispatch({
       type: CREATE_PRODUCT,
-      productData: { id: resData.name, title, description, imageUrl, price },
+      productData: {
+        id: resData.name,
+        title,
+        description,
+        imageUrl,
+        price,
+        ownerId: userId,
+      },
     });
   };
 };
 export const updateProduct = (id, title, description, imageUrl) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://react-native-shop-app-aa566.firebaseio.com/products/${id}.json`,
+      `https://react-native-shop-app-aa566.firebaseio.com/products/${id}.json?auth=${token}`,
       {
         method: "PATCH",
         header: {

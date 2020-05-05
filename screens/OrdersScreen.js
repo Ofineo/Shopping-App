@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
+  Text,
   StyleSheet,
   FlatList,
   Platform,
@@ -32,6 +33,13 @@ const OrdersScreen = (props) => {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={Colors.accent} />
+      </View>
+    );
+  }
+  if (orders.length === 0) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>No Orders found, why not order some products?</Text>
       </View>
     );
   }
