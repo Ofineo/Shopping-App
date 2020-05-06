@@ -6,7 +6,7 @@ import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 import { enableScreens } from "react-native-screens";
 import productsReducer from "./store/reducers/products";
-import ShopNavigator from "./navigation/ShopNavigator";
+import NavigationContainer from "./navigation/ShopNavigator";
 import cartReducer from "./store/reducers/cart";
 import ordersReducer from "./store/reducers/orders";
 import authReducer from "./store/reducers/auth";
@@ -46,7 +46,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      <NavigationContainer/>
     </Provider>
   );
 }

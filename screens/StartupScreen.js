@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   View,
   ActivityIndicator,
   StyleSheet,
-  AsyncStorage
-} from 'react-native';
-import { useDispatch } from 'react-redux';
+  AsyncStorage,
+} from "react-native";
+import { useDispatch } from "react-redux";
 
-import Colors from '../constants/Colors';
-import * as authActions from '../store/actions/auth';
+import Colors from "../constants/Colors";
+import * as authActions from "../store/actions/auth";
 
-const StartupScreen = props => {
+const StartupScreen = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const tryLogin = async () => {
-      const userData = await AsyncStorage.getItem('userData');
+      const userData = await AsyncStorage.getItem("userData");
       if (!userData) {
-        props.navigation.navigate('Auth');
+        props.navigation.navigate("Auth");
         return;
       }
       const transformedData = JSON.parse(userData);
@@ -25,12 +25,13 @@ const StartupScreen = props => {
       const expirationDate = new Date(expiryDate);
 
       if (expirationDate <= new Date() || !token || !userId) {
-        props.navigation.navigate('Auth');
+        props.navigation.navigate("Auth");
         return;
       }
 
-      props.navigation.navigate('Shop');
-      dispatch(authActions.authenticate(userId, token));
+      const expirationTime = expirationDate.getTime() - new Date().getTime();
+      props.navigation.navigate("Shop");
+      dispatch(authActions.authenticate(userId, token, expirationTime));
     };
 
     tryLogin();
@@ -46,9 +47,9 @@ const StartupScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default StartupScreen;
