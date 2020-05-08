@@ -61,7 +61,7 @@ const AuthScreen = (props) => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      props.navigation.navigate({ routeName: "Shop" });
+      // props.navigation.navigate({ routeName: "Shop" });
     } catch (error) {
       setIsLoading(false);
       setError(error.message);
@@ -157,7 +157,7 @@ const AuthScreen = (props) => {
   );
 };
 
-AuthScreen.navigationOptions = {
+export const AuthScreenOptions = {
   title: "Please Authenticate",
 };
 

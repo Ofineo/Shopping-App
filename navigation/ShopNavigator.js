@@ -24,7 +24,7 @@ import UserProductScreen, {
 import EditProductScreen, {
   editProductScreenOptions,
 } from "../screens/EditProductScreen";
-import AuthScreen from "../screens/AuthScreen";
+import AuthScreen, { AuthScreenOptions } from "../screens/AuthScreen";
 import StartupScreen from "../screens/StartupScreen";
 
 const defaultNav = {
@@ -120,7 +120,7 @@ const AdminStackNavigator = createStackNavigator();
 
 export const AdminNavigator = () => {
   return (
-    <AdminStackNavigator.Navigator>
+    <AdminStackNavigator.Navigator screenOptions={defaultNav}>
       <AdminStackNavigator.Screen
         name="UserProducts"
         component={UserProductScreen}
@@ -173,7 +173,7 @@ export const ShopNavigator = () => {
                 color={Colors.accent}
                 onPress={() => {
                   dispatch(authAction.logout());
-                  props.navigation.navigate({ routeName: "Auth" });
+                  // props.navigation.navigate({ routeName: "Auth" });
                 }}
               />
             </SafeAreaView>
@@ -183,7 +183,7 @@ export const ShopNavigator = () => {
     >
       <ShopDrawerNavigator.Screen
         name="Products"
-        component="ProductNavigator"
+        component={ProductsNavigator}
         options={{
           drawerIcon: (props) => (
             <Ionicons
@@ -196,7 +196,7 @@ export const ShopNavigator = () => {
       />
       <ShopDrawerNavigator.Screen
         name="Orders"
-        component="OrdersNavigator"
+        component={OrdersNavigator}
         options={{
           drawerIcon: (props) => (
             <Ionicons
@@ -209,7 +209,7 @@ export const ShopNavigator = () => {
       />
       <ShopDrawerNavigator.Screen
         name="Admin"
-        component="AdminNavigator"
+        component={AdminNavigator}
         options={{
           drawerIcon: (props) => (
             <Ionicons
@@ -254,19 +254,32 @@ export const ShopNavigator = () => {
 //     },
 //   }
 // );
+const AuthStackNavigator = createStackNavigator();
 
-const AuthNavigator = createStackNavigator(
-  {
-    Auth: { screen: AuthScreen },
-  },
-  {
-    defaultNavigationOptions: defaultNav,
-  }
-);
+export const AuthNavigator = () => {
+  return (
+    <AuthStackNavigator.Navigator screenOptions={defaultNav}>
+      <AuthStackNavigator.Screen
+        name="screen"
+        component={AuthScreen}
+        options={AuthScreenOptions}
+      />
+    </AuthStackNavigator.Navigator>
+  );
+};
 
-const MainNavigator = createSwitchNavigator({
-  Startup: StartupScreen,
-  Auth: AuthNavigator,
-  Shop: ShopNavigator,
-});
-export default createAppContainer(MainNavigator);
+// const AuthNavigator = createStackNavigator(
+//   {
+//     Auth: { screen: AuthScreen },
+//   },
+//   {
+//     defaultNavigationOptions: defaultNav,
+//   }
+// );
+
+// const MainNavigator = createSwitchNavigator({
+//   Startup: StartupScreen,
+//   Auth: AuthNavigator,
+//   Shop: ShopNavigator,
+// });
+// export default createAppContainer(MainNavigator);
