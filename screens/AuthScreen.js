@@ -157,7 +157,7 @@ const AuthScreen = (props) => {
   );
 };
 
-AuthScreen.navigationOptions = {
+export const AuthScreenOptions = {
   title: "Please Authenticate",
 };
 

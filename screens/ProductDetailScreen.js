@@ -16,7 +16,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton  from "../components/UI/HeaderButton";
 
 const ProductDetailScreen = (props) => {
-  const prodId = props.navigation.getParam("productId");
+  const prodId = props.route.params.productId;
   const selectedProduct = useSelector((state) =>
     state.products.availableProducts.find((product) => product.id === prodId)
   );
@@ -38,9 +38,9 @@ const ProductDetailScreen = (props) => {
   );
 };
 
-ProductDetailScreen.navigationOptions = (navData) => {
+export const productDetailOptions = (navData) => {
   return {
-    title: navData.navigation.getParam("productTitle"),
+    title: navData.route.params.productTitle,
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
