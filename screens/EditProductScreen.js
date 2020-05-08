@@ -42,7 +42,9 @@ const EditProductScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
-  const prodId = props.navigation.getParam("productId");
+  const prodId = props.route.params
+    ? props.route.params.prodcutId.prodcutId
+    : null;
   const editedProduct = useSelector((state) =>
     state.products.userProducts.find((prod) => prod.id === prodId)
   );
@@ -64,7 +66,7 @@ const EditProductScreen = (props) => {
     },
     formIsValid: editedProduct ? true : false,
   });
-  
+
   useEffect(() => {
     if (error) {
       Alert.alert("An error ocurred!", errror, [{ text: "Okay" }]);
@@ -110,9 +112,17 @@ const EditProductScreen = (props) => {
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
-    props.navigation.setParams({
-      submit: submitHandler,
-    });
+    props.navigation.setOptions({ headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Save"
+          iconName={
+            Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
+          }
+          onPress={submitHandler}
+        />
+      </HeaderButtons>
+    )});
   }, [submitHandler]);
 
   const inputChangeHandler = useCallback(
@@ -201,22 +211,10 @@ const EditProductScreen = (props) => {
 };
 
 export const editProductScreenOptions = (navData) => {
-  const submitfunc = navData.navigation.getParam("submit");
+  const routeParams = navData.route.params ? navData.route.params : {};
   return {
-    title: navData.navigation.getParam("productId")
-      ? "Edit Product"
-      : "Add Product",
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item
-          title="Save"
-          iconName={
-            Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
-          }
-          onPress={submitfunc}
-        />
-      </HeaderButtons>
-    ),
+    title: routeParams.productId ? "Edit Product" : "Add Product",
+   
   };
 };
 
