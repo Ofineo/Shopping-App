@@ -76,8 +76,8 @@ const CartScreen = (props) => {
   );
 };
 
-CartScreen.navigationOptions = {
-  title: "Your Cart",
+export const cartScreenOptions = () => {
+  return { title: "Your Cart" };
 };
 
 const styles = StyleSheet.create({
