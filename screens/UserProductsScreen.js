@@ -63,7 +63,7 @@ const UserProductScreen = (props) => {
   );
 };
 
-UserProductScreen.navigationOptions = (navData) => {
+export const userProductsScreenOptions = (navData) => {
   return {
     title: "Your Products Admin area",
     headerRight: () => (
