@@ -23,10 +23,10 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () => {
-  Fonts.loadAsync({
+  return Fonts.loadAsync({
     "open-sans": require("./assets/Fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/Fonts/OpenSans-Bold.ttf"),
-    bb2: require("./assets/Fonts/BalooBhaina2-Regular.ttf"),
+    'bb2': require("./assets/Fonts/BalooBhaina2-Regular.ttf"),
     "bb2-bold": require("./assets/Fonts/BalooBhaina2-Bold.ttf"),
   });
 };
